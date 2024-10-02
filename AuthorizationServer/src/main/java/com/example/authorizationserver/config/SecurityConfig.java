@@ -62,7 +62,7 @@ public class SecurityConfig {
         return NoOpPasswordEncoder.getInstance();
     }
 
-    @Bean
+    /*@Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient registeredClient =
                 RegisteredClient
@@ -82,8 +82,8 @@ public class SecurityConfig {
 //                                .build())
                         .scope(OidcScopes.OPENID)
                         .build();
-        return new InMemoryRegisteredClientRepository(registeredClient);
-    }
+        return new InMemoryRegisteredClientRepository(registeredClient);*/
+//    }
 
     /*@Bean
     public JWKSource<SecurityContext> jwkSource()
