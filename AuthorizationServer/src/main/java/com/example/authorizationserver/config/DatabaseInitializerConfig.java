@@ -60,7 +60,7 @@ public class DatabaseInitializerConfig {
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                    .redirectUri("https://example.com/authorized")
+                    .redirectUri("http://localhost:8080/login/oauth2/code/client")
                     .scope(OidcScopes.OPENID)
                     .build();
             clientJpaRepository.save(registeredClient);
