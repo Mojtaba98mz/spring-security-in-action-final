@@ -15,7 +15,7 @@ public class Security {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
-        http.oauth2Client(Customizer.withDefaults());
+        http.oauth2Login(Customizer.withDefaults());
         http.cors(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(
