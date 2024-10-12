@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface Resource1Client {
 
     @GetMapping("/demo")
-    String callResource1(@RequestHeader("Authorization") String bearerToken);
+    String callResource1();
 }
