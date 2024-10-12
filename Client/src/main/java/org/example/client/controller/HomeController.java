@@ -8,16 +8,23 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class HomeController {
 
 
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final Resource1Client resource1Client;
 
     @GetMapping("/")
     public String home(Authentication authentication) {
+        getToken(authentication);
+        return "Hello!!!";
+    }
+
+    private String getToken(Authentication authentication) {
         if (authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
 
@@ -29,8 +36,13 @@ public class HomeController {
 
             // Retrieve the access token
             OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
-            System.out.println("Token Value: " + accessToken.getTokenValue());
+            return accessToken.getTokenValue();
         }
-        return "index.html";
+        return null;
+    }
+
+    @GetMapping("/callrs1")
+    public String callRS1(Authentication authentication){
+        return resource1Client.callResource1("Bearer "+getToken(authentication));
     }
 }
