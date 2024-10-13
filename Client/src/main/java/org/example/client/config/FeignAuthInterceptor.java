@@ -2,7 +2,6 @@ package org.example.client.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.example.client.service.OAuth2ClientService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class FeignAuthInterceptor implements RequestInterceptor {
 
     private final OAuth2AuthorizedClientService authorizedClientService;
-    private final OAuth2ClientService oAuth2ClientService;
+    private final OAuth2AuthorizedClientManager authorizedClientManager;
 
     @Value("${spring.security.oauth2.client.registration.client-app.client-id}")
     private String clientId;
@@ -26,25 +25,29 @@ public class FeignAuthInterceptor implements RequestInterceptor {
     private String appName;
 
 
-    public FeignAuthInterceptor(OAuth2AuthorizedClientService authorizedClientService, OAuth2ClientService oAuth2ClientService) {
+    public FeignAuthInterceptor(OAuth2AuthorizedClientService authorizedClientService, OAuth2AuthorizedClientManager authorizedClientManager) {
         this.authorizedClientService = authorizedClientService;
-        this.oAuth2ClientService = oAuth2ClientService;
+        this.authorizedClientManager = authorizedClientManager;
     }
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        // Check if Authorization header is already present
+        // Check if access token is already present
         var existToken = getToken();
         if (existToken == null) {
-            String accessToken = oAuth2ClientService.getAccessToken();
-            var authorizedClient = authorizedClientService.loadAuthorizedClient(appName,clientId);
+            OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
+                    .withClientRegistrationId("client-credentials")
+                    .principal(clientId)
+                    .build();
+            OAuth2AuthorizedClient authorizedClient = this.authorizedClientManager.authorize(authorizeRequest);
             if (authorizedClient != null) {
-                var tokenValue = authorizedClient.getAccessToken().getTokenValue();
-                requestTemplate.header("Authorization", "Bearer " + tokenValue);
+                existToken = authorizedClient.getAccessToken().getTokenValue();
             }
-        }else {
-            requestTemplate.header("Authorization", "Bearer " + existToken);
+            else {
+                throw new IllegalStateException("Unable to retrieve access token");
+            }
         }
+        requestTemplate.header("Authorization", "Bearer " + existToken);
     }
 
     private String getToken() {

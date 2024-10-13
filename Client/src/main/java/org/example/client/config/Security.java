@@ -25,25 +25,4 @@ public class Security {
                 c -> c.anyRequest().authenticated());
         return http.build();
     }
-
-    @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientService authorizedClientService) {
-
-        // Create the provider for the client credentials grant
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
-                OAuth2AuthorizedClientProviderBuilder.builder()
-                        .clientCredentials()
-                        .build();
-
-        // Use the AuthorizedClientServiceOAuth2AuthorizedClientManager to manage the token
-        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
-                new AuthorizedClientServiceOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository, authorizedClientService);
-
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-
-        return authorizedClientManager;
-    }
 }

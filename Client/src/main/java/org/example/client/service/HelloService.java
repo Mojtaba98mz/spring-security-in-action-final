@@ -11,7 +11,7 @@ public class HelloService {
 
     private final Resource1Client resource1Client;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void fixedRateTask() {
         System.out.println(resource1Client.callResource1());
     }
