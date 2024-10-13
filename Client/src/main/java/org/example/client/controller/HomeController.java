@@ -19,12 +19,12 @@ public class HomeController {
     private final Resource1Client resource1Client;
 
     @GetMapping("/")
-    public String home(Authentication authentication) {
-        getToken(authentication);
+    public String home(/*Authentication authentication*/) {
+//        getToken(authentication);
         return "Hello!!!";
     }
 
-    private String getToken(Authentication authentication) {
+    /*private String getToken(Authentication authentication) {
         if (authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
 
@@ -39,10 +39,10 @@ public class HomeController {
             return accessToken.getTokenValue();
         }
         return null;
-    }
+    }*/
 
     @GetMapping("/callrs1")
-    public String callRS1(Authentication authentication){
-        return resource1Client.callResource1("Bearer "+getToken(authentication));
+    public String callRS1(){
+        return resource1Client.callResource1();
     }
 }
