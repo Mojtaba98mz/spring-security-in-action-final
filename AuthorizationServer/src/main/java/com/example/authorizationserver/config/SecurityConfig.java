@@ -43,6 +43,7 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfiguration
                 .applyDefaultSecurity(http);
         http.cors(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults());
 
